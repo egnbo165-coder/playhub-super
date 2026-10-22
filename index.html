@@ -1,0 +1,2188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08060d">
+<title>PlayHub Super</title>
+
+<style>
+*{box-sizing:border-box}
+:root{
+  --bg:#050408;
+  --bg2:#0b0811;
+  --card:#12101a;
+  --card2:#181321;
+  --purple:#8b3dff;
+  --purple2:#cf43ff;
+  --text:#fff;
+  --muted:#aaa3b6;
+  --line:#2b2039;
+  --green:#55e89b;
+  --red:#ff5475;
+}
+*{scrollbar-width:thin;scrollbar-color:#7035c8 #08060d}
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 10% 0%,#40117a 0,transparent 30%),
+    radial-gradient(circle at 100% 15%,#54106d 0,transparent 27%),
+    var(--bg);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:active{transform:scale(.97)}
+.hidden{display:none!important}
+
+#loading{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  background:#050408;
+}
+.loader{
+  width:55px;
+  height:55px;
+  border:5px solid #30203d;
+  border-top-color:#b342ff;
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+#app{
+  max-width:1150px;
+  min-height:100vh;
+  margin:auto;
+}
+header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  padding:12px;
+  background:#07060ddd;
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(20px);
+}
+.top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.logo{
+  font-size:25px;
+  font-weight:1000;
+  background:linear-gradient(90deg,#fff,#c94cff,#783aff);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.topRight{display:flex;gap:7px;align-items:center}
+.iconBtn,.secondary{
+  color:#fff;
+  background:#17121f;
+  border:1px solid #342546;
+  border-radius:13px;
+  padding:9px 12px;
+}
+.primary{
+  color:white;
+  border:0;
+  border-radius:14px;
+  padding:11px 16px;
+  font-weight:800;
+  background:linear-gradient(135deg,#7030ff,#c33fff);
+  box-shadow:0 7px 25px #8b3dff30;
+}
+.danger{
+  background:#35121d;
+  color:#ff7891;
+  border:1px solid #70243b;
+  border-radius:13px;
+  padding:10px 14px;
+}
+.screen{
+  display:none;
+  padding:18px 13px 105px;
+}
+.screen.active{display:block}
+
+.hero{
+  padding:25px;
+  border-radius:28px;
+  border:1px solid #432765;
+  background:linear-gradient(135deg,#281044dd,#100d17ee);
+  box-shadow:0 0 45px #8b3dff18;
+}
+.hero h1{margin:0 0 8px;font-size:35px}
+.hero p{color:#c2bacd}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:14px;
+  margin-top:15px;
+}
+.card{
+  background:linear-gradient(145deg,#17131f,#0c0a10);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:17px;
+}
+.card h2,.card h3{margin-top:0}
+.big{font-size:30px;font-weight:900}
+.muted{color:var(--muted)}
+.center{text-align:center}
+
+input,textarea,select{
+  width:100%;
+  margin:5px 0;
+  padding:13px;
+  color:#fff;
+  background:#09070d;
+  border:1px solid #382848;
+  border-radius:14px;
+  outline:none;
+}
+textarea{min-height:100px;resize:vertical}
+input:focus,textarea:focus,select:focus{
+  border-color:#a347ff;
+  box-shadow:0 0 0 3px #8b3dff18;
+}
+label{
+  display:block;
+  margin-top:10px;
+  color:#cfc7d9;
+  font-size:13px;
+}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.row>*{flex:1}
+hr{border:0;border-top:1px solid var(--line);margin:18px 0}
+
+.profileRow{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.avatar{
+  flex:none;
+  width:68px;
+  height:68px;
+  overflow:hidden;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:26px;
+  font-weight:900;
+  background:linear-gradient(135deg,#7431ff,#d343ff);
+}
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.badge{
+  display:inline-block;
+  padding:4px 9px;
+  border-radius:999px;
+  background:#873cff;
+  color:#fff;
+  font-size:11px;
+  font-weight:900;
+}
+.coin{
+  color:#e2b8ff;
+  font-weight:900;
+}
+
+.post{
+  margin-top:14px;
+  padding:16px;
+  border-radius:20px;
+  background:#100d15;
+  border:1px solid var(--line);
+}
+.postTop{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.postActions{
+  display:flex;
+  gap:7px;
+  margin-top:12px;
+}
+.postActions button{
+  flex:1;
+  color:#fff;
+  background:#191421;
+  border:1px solid #31233e;
+  border-radius:12px;
+  padding:9px;
+}
+.media{
+  width:100%;
+  max-height:430px;
+  object-fit:contain;
+  border-radius:16px;
+  margin-top:12px;
+  background:#050407;
+}
+
+.nav{
+  position:fixed;
+  z-index:200;
+  left:0;
+  right:0;
+  bottom:0;
+  display:flex;
+  justify-content:center;
+  gap:6px;
+  padding:8px;
+  background:#07060ef5;
+  border-top:1px solid #2b2039;
+  backdrop-filter:blur(22px);
+  overflow-x:auto;
+}
+.nav button{
+  min-width:64px;
+  padding:9px 8px;
+  color:#bbb3c6;
+  background:#14101a;
+  border:1px solid #2b2039;
+  border-radius:13px;
+  font-size:11px;
+}
+.nav button.active{
+  color:#fff;
+  background:linear-gradient(135deg,#7130ff,#bb3fff);
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:14px;
+  background:#000b;
+  backdrop-filter:blur(13px);
+}
+.modal.show{display:flex}
+.modalBox{
+  width:min(520px,100%);
+  max-height:92vh;
+  overflow:auto;
+  padding:22px;
+  border:1px solid #482966;
+  border-radius:25px;
+  background:#0d0a12;
+}
+.close{
+  float:right;
+  padding:8px 11px;
+  color:#fff;
+  background:#211927;
+  border:0;
+  border-radius:11px;
+}
+.modalTitle{font-size:25px;font-weight:900;margin-bottom:14px}
+
+.premium{
+  background:
+    linear-gradient(120deg,#ff38ad18,#7b43ff30,#21d9ff18);
+  border:1px solid #bf45ff;
+  animation:pulsePremium 3s infinite;
+}
+@keyframes pulsePremium{
+  50%{box-shadow:0 0 35px #bc42ff45}
+}
+
+.toast{
+  position:fixed;
+  z-index:3000;
+  left:50%;
+  bottom:90px;
+  transform:translateX(-50%);
+  padding:12px 17px;
+  border-radius:14px;
+  background:#21182d;
+  border:1px solid #70409a;
+  box-shadow:0 10px 30px #0008;
+}
+
+.game{
+  position:relative;
+  height:400px;
+  overflow:hidden;
+  margin-top:12px;
+  border-radius:20px;
+  border:1px solid #39274b;
+  background:#030306;
+}
+#rocketGame{touch-action:none}
+.rocket{
+  position:absolute;
+  bottom:25px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:48px;
+  user-select:none;
+}
+.obstacle{
+  position:absolute;
+  width:45px;
+  height:45px;
+  border-radius:12px;
+  background:#ff3159;
+  box-shadow:0 0 22px #ff315966;
+}
+.crystal{
+  position:absolute;
+  width:24px;
+  height:24px;
+  background:#a93dff;
+  transform:rotate(45deg);
+  box-shadow:0 0 20px #a93dff;
+}
+#asteroidGame{height:420px}
+.asteroid{
+  position:absolute;
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  background:radial-gradient(circle at 30% 25%,#bbb,#666 35%,#242424 72%);
+  box-shadow:0 0 18px #aaa5;
+}
+
+.chat{
+  min-height:300px;
+  max-height:420px;
+  overflow:auto;
+  padding:10px;
+  border-radius:18px;
+  background:#08070b;
+  border:1px solid var(--line);
+}
+.msg{
+  max-width:82%;
+  padding:10px 13px;
+  margin:7px 0;
+  border-radius:15px;
+  background:#17121f;
+}
+.msg.me{
+  margin-left:auto;
+  background:linear-gradient(135deg,#5724a5,#7b31b5);
+}
+.searchBox{margin-bottom:12px}
+
+.light{
+  --bg:#f2eef8;
+  --bg2:#fff;
+  --card:#fff;
+  --card2:#f5f1fa;
+  --text:#16121d;
+  --muted:#6f6678;
+  --line:#ddd3e8;
+}
+.light body{
+  background:#f2eef8;
+  color:#16121d;
+}
+.light header,.light .nav{
+  background:#fffffff2;
+}
+.light .card,
+.light .post,
+.light .modalBox{
+  background:#fff;
+}
+.light input,.light textarea,.light select{
+  color:#17131d;
+  background:#f8f5fb;
+}
+.light .iconBtn,.light .secondary,.light .nav button{
+  color:#32283b;
+  background:#eee8f4;
+}
+.light .hero{
+  background:linear-gradient(135deg,#eee0ff,#fff);
+}
+
+@media(max-width:600px){
+  .hero h1{font-size:28px}
+  .hero{padding:20px}
+  .screen{padding-left:9px;padding-right:9px}
+  .row>*{min-width:120px}
+}
+</style>
+</head>
+
+<body>
+
+<div id="loading">
+  <div class="loader"></div>
+  <h2>PlayHub Super</h2>
+  <div class="muted">Подключение...</div>
+</div>
+
+<div id="app" class="hidden">
+
+<header>
+  <div class="top">
+    <div class="logo">PlayHub Super</div>
+    <div class="topRight">
+      <span id="coinTop" class="coin">🪙 0</span>
+      <button class="iconBtn" onclick="openProfile()">👤</button>
+    </div>
+  </div>
+</header>
+
+<!-- HOME -->
+<section id="home" class="screen active">
+  <div class="hero">
+    <h1>Добро пожаловать в PlayHub Super 🚀</h1>
+    <p>Твоя социальная платформа: посты, сообщения, игры, PlayCoins и PlayHub AI.</p>
+    <div class="row">
+      <button class="primary" onclick="showScreen('posts')">Открыть ленту</button>
+      <button class="secondary" onclick="showScreen('games')">Играть 🎮</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>🪙 PlayCoins</h3>
+      <div id="homeCoins" class="big">0</div>
+      <div class="muted">Твои монеты</div>
+    </div>
+
+    <div class="card">
+      <h3>💎 Premium</h3>
+      <div id="homePremium">Нет Premium</div>
+      <button class="primary" onclick="showScreen('premium')">Открыть Premium</button>
+    </div>
+
+    <div class="card">
+      <h3>🤖 PlayHub AI</h3>
+      <p class="muted">Локальный помощник PlayHub.</p>
+      <button class="primary" onclick="showScreen('ai')">Запустить</button>
+    </div>
+  </div>
+</section>
+
+<!-- POSTS -->
+<section id="posts" class="screen">
+  <h2>📰 Лента</h2>
+
+  <div class="card">
+    <textarea id="postText" placeholder="Что нового?"></textarea>
+    <button class="primary" onclick="createPost()">Опубликовать</button>
+  </div>
+
+  <input class="searchBox" id="postSearch" placeholder="🔎 Поиск по постам" oninput="renderPosts()">
+
+  <div id="postsList"></div>
+</section>
+
+<!-- VIDEOS -->
+<section id="videos" class="screen">
+  <h2>🎬 Видео</h2>
+  <div class="card">
+    <p>Видео-публикации будут подключаться к облачному хранилищу после включения Firebase Storage.</p>
+    <span class="badge">Firebase Storage пока не включён</span>
+  </div>
+</section>
+
+<!-- MESSAGES -->
+<section id="messages" class="screen">
+  <h2>💬 Сообщения</h2>
+
+  <div class="card">
+    <input id="messageUser" placeholder="Email пользователя">
+    <button class="secondary" onclick="selectChat()">Открыть чат</button>
+  </div>
+
+  <div id="chatTitle" class="card hidden"></div>
+  <div id="chatBox" class="chat hidden"></div>
+
+  <div id="chatSend" class="row hidden">
+    <input id="messageText" placeholder="Сообщение">
+    <button class="primary" onclick="sendMessage()">➤</button>
+  </div>
+</section>
+
+<!-- GROUPS -->
+<section id="groups" class="screen">
+  <h2>👥 Группы</h2>
+
+  <div class="card">
+    <input id="groupName" placeholder="Название группы">
+    <button class="primary" onclick="createGroup()">Создать группу</button>
+  </div>
+
+  <div id="groupsList"></div>
+</section>
+
+<!-- CHANNELS -->
+<section id="channels" class="screen">
+  <h2>📢 Каналы</h2>
+  <div class="card">
+    <input id="channelName" placeholder="Название канала">
+    <button class="primary" onclick="createChannel()">Создать канал</button>
+  </div>
+  <div id="channelsList"></div>
+</section>
+
+<!-- GAMES -->
+<section id="games" class="screen">
+  <h2>🎮 Игры</h2>
+
+  <div class="card">
+    <h3>☄️ Asteroid Defense</h3>
+    <p class="muted">Уничтожай астероиды. Попадание не отнимает жизнь.</p>
+    <div class="row">
+      <b>Очки: <span id="asteroidScore">0</span></b>
+      <b>❤️ Жизни: <span id="asteroidLives">3</span></b>
+    </div>
+    <div id="asteroidGame" class="game"></div>
+    <button class="primary" onclick="startAsteroids()">Запустить Asteroid Defense</button>
+  </div>
+
+  <div class="card">
+    <h3>🚀 Rocket Run</h3>
+    <p class="muted">Двигай ракету пальцем, избегай красных препятствий и собирай фиолетовые кристаллы.</p>
+    <b>Кристаллы: <span id="rocketScore">0</span></b>
+    <div id="rocketGame" class="game">
+      <div id="rocket" class="rocket">🚀</div>
+    </div>
+    <button class="primary" onclick="startRocket()">Запустить Rocket Run</button>
+  </div>
+</section>
+
+<!-- AI -->
+<section id="ai" class="screen">
+  <h2>🤖 PlayHub AI</h2>
+
+  <div id="aiChat" class="chat">
+    <div class="msg">Привет! Я PlayHub AI. Чем помочь?</div>
+  </div>
+
+  <div class="row">
+    <input id="aiInput" placeholder="Напиши сообщение..." onkeydown="if(event.key==='Enter')askAI()">
+    <button class="primary" onclick="askAI()">➤</button>
+  </div>
+</section>
+
+<!-- COINS -->
+<section id="coins" class="screen">
+  <h2>🪙 PlayCoins</h2>
+
+  <div class="hero">
+    <div class="muted">Баланс</div>
+    <div id="coinBalance" class="big">0 🪙</div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>🎁 Ежедневная награда</h3>
+      <p>Получай 100 PlayCoins раз в сутки.</p>
+      <button class="primary" onclick="dailyReward()">Получить</button>
+    </div>
+
+    <div class="card">
+      <h3>🎮 Игры</h3>
+      <p>Играй и получай PlayCoins в игровых режимах.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PREMIUM -->
+<section id="premium" class="screen">
+  <div class="card premium">
+    <h2>💎 PlayHub Premium Super</h2>
+    <p>Красивый Premium-профиль, значок и специальные эффекты.</p>
+
+    <h3>10 PlayCoins / 30 дней</h3>
+
+    <div class="grid">
+      <div class="card">
+        <h3>💎 Premium Badge</h3>
+        <p class="muted">Специальный значок возле профиля.</p>
+      </div>
+      <div class="card">
+        <h3>✨ Эффект</h3>
+        <p class="muted">Градиентный эффект профиля.</p>
+      </div>
+      <div class="card">
+        <h3>😊 Emoji</h3>
+        <p class="muted">Можно выбрать Premium-emoji.</p>
+      </div>
+    </div>
+
+    <button class="primary" onclick="buyPremium()">Купить за 10 PlayCoins</button>
+    <button class="secondary" onclick="trialPremium()">Бесплатные 24 часа</button>
+  </div>
+</section>
+
+<!-- POPULAR -->
+<section id="popular" class="screen">
+  <h2>🔥 Популярное</h2>
+  <div id="popularList"></div>
+</section>
+
+<!-- PROFILE -->
+<section id="profile" class="screen">
+  <h2>👤 Профиль</h2>
+  <div id="profileCard"></div>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings" class="screen">
+  <h2>⚙️ Настройки</h2>
+
+  <div class="card">
+    <h3>🎨 Тема</h3>
+    <button class="secondary" onclick="setTheme('dark')">🌙 Тёмная</button>
+    <button class="secondary" onclick="setTheme('light')">☀️ Светлая</button>
+  </div>
+
+  <div class="card">
+    <h3>🌍 Язык</h3>
+    <select id="language" onchange="changeLanguage()">
+      <option value="ru">Русский</option>
+      <option value="de">Deutsch</option>
+      <option value="en">English</option>
+      <option value="uk">Українська</option>
+    </select>
+    <p class="muted">Основная версия интерфейса сейчас русская.</p>
+  </div>
+
+  <div class="card">
+    <h3>📱 Режим устройства</h3>
+    <select onchange="setDeviceMode(this.value)">
+      <option value="auto">Автоматически</option>
+      <option value="phone">Телефон</option>
+      <option value="tablet">Планшет</option>
+      <option value="computer">Компьютер</option>
+      <option value="vr">VR</option>
+    </select>
+  </div>
+
+  <button class="danger" onclick="logout()">Выйти из аккаунта</button>
+</section>
+
+<!-- DEVELOPER -->
+<section id="developer" class="screen">
+  <h2>🛠️ Developer Area</h2>
+  <div id="developerContent"></div>
+</section>
+
+<nav class="nav">
+  <button onclick="showScreen('home')">🏠<br>Главная</button>
+  <button onclick="showScreen('posts')">📰<br>Лента</button>
+  <button onclick="showScreen('videos')">🎬<br>Видео</button>
+  <button onclick="showScreen('messages')">💬<br>Чаты</button>
+  <button onclick="showScreen('groups')">👥<br>Группы</button>
+  <button onclick="showScreen('games')">🎮<br>Игры</button>
+  <button onclick="showScreen('ai')">🤖<br>AI</button>
+  <button onclick="showScreen('coins')">🪙<br>Coins</button>
+  <button onclick="showScreen('profile')">👤<br>Профиль</button>
+</nav>
+</div>
+
+<!-- AUTH -->
+<div id="authModal" class="modal show">
+  <div class="modalBox">
+
+    <div id="loginBox">
+      <div class="modalTitle">Вход в PlayHub</div>
+
+      <label>Email</label>
+      <input id="loginEmail" type="email" autocomplete="email">
+
+      <label>Пароль</label>
+      <input id="loginPassword" type="password" autocomplete="current-password">
+
+      <button class="primary" onclick="login()">Войти</button>
+      <button class="secondary" onclick="showRegister()">Создать аккаунт</button>
+      <button class="secondary" onclick="guestLogin()">Войти как гость</button>
+
+      <p id="authError" class="red"></p>
+    </div>
+
+    <div id="registerBox" class="hidden">
+      <div class="modalTitle">Создание аккаунта</div>
+
+      <label>Email</label>
+      <input id="regEmail" type="email" autocomplete="email">
+
+      <label>Пароль</label>
+      <input id="regPassword" type="password" autocomplete="new-password">
+
+      <label>Возраст</label>
+      <input id="regAge" type="number" min="8" max="120">
+
+      <label>Никнейм</label>
+      <input id="regName" maxlength="30">
+
+      <label>Настоящее имя</label>
+      <input id="regRealName" maxlength="60">
+
+      <label>Developer-код, если он у тебя есть</label>
+      <input id="regDevCode" placeholder="Необязательно">
+
+      <label>Emoji профиля</label>
+      <input id="regEmoji" value="🙂" maxlength="4">
+
+      <button class="primary" onclick="register()">Создать аккаунт</button>
+      <button class="secondary" onclick="showLogin()">Назад</button>
+
+      <p id="regError" class="red"></p>
+    </div>
+
+    <div id="guestBox" class="hidden">
+      <div class="modalTitle">Гостевой режим</div>
+      <p>В гостевом режиме можно посмотреть интерфейс, но облачный аккаунт не создаётся.</p>
+      <button class="primary" onclick="continueGuest()">Продолжить</button>
+      <button class="secondary" onclick="showLogin()">Назад</button>
+    </div>
+
+  </div>
+</div>
+
+<div id="editModal" class="modal">
+  <div class="modalBox">
+    <button class="close" onclick="closeModal('editModal')">✕</button>
+    <div class="modalTitle">Редактировать профиль</div>
+
+    <label>Никнейм</label>
+    <input id="editName">
+
+    <label>Настоящее имя</label>
+    <input id="editRealName">
+
+    <label>Описание</label>
+    <textarea id="editBio"></textarea>
+
+    <label>Emoji</label>
+    <input id="editEmoji" maxlength="4">
+
+    <button class="primary" onclick="saveProfile()">Сохранить</button>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script type="module">
+
+/* =========================================================
+   FIREBASE
+========================================================= */
+
+import {initializeApp}
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  orderBy,
+  limit,
+  where,
+  serverTimestamp,
+  increment
+}
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyAfsfm71Kss-b4VuU82Mj5CGss1pXxZxt0",
+  authDomain:"playhub-super.firebaseapp.com",
+  projectId:"playhub-super",
+  storageBucket:"playhub-super.firebasestorage.app",
+  messagingSenderId:"451573029310",
+  appId:"1:451573029310:web:d56a733a6518482ea981ef"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+const DEV_KEY="PLAYHUB-DEV-2026";
+const MIN_AGE=8;
+
+let currentUser=null;
+let profile=null;
+let guest=false;
+let selectedChatEmail="";
+let asteroidTimer=null;
+let asteroidRunning=false;
+let rocketTimer=null;
+let rocketRunning=false;
+let rocketScore=0;
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+const $=id=>document.getElementById(id);
+
+function toast(text){
+  $("toast").textContent=text;
+  $("toast").classList.remove("hidden");
+  setTimeout(()=>$("toast").classList.add("hidden"),2500);
+}
+
+function escapeHTML(s=""){
+  return String(s).replace(/[&<>"']/g,c=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  }[c]));
+}
+
+window.showScreen=function(id){
+  document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+  const el=$(id);
+  if(el)el.classList.add("active");
+
+  if(id==="posts")renderPosts();
+  if(id==="groups")renderGroups();
+  if(id==="channels")renderChannels();
+  if(id==="profile")renderProfile();
+  if(id==="popular")renderPopular();
+  if(id==="developer")renderDeveloper();
+  if(id==="coins")updateCoinsUI();
+};
+
+window.closeModal=function(id){
+  $(id).classList.remove("show");
+};
+
+/* =========================================================
+   AUTH UI
+========================================================= */
+
+window.showRegister=function(){
+  $("loginBox").classList.add("hidden");
+  $("guestBox").classList.add("hidden");
+  $("registerBox").classList.remove("hidden");
+};
+
+window.showLogin=function(){
+  $("registerBox").classList.add("hidden");
+  $("guestBox").classList.add("hidden");
+  $("loginBox").classList.remove("hidden");
+};
+
+window.guestLogin=function(){
+  $("loginBox").classList.add("hidden");
+  $("registerBox").classList.add("hidden");
+  $("guestBox").classList.remove("hidden");
+};
+
+window.continueGuest=function(){
+  guest=true;
+  currentUser=null;
+  profile={
+    name:"Гость",
+    realName:"",
+    email:"",
+    coins:0,
+    premiumUntil:0,
+    premiumTrialUsed:true,
+    dev:false,
+    emoji:"👤",
+    bio:"Гостевой аккаунт"
+  };
+
+  $("authModal").classList.remove("show");
+  $("app").classList.remove("hidden");
+  renderProfile();
+  updateCoinsUI();
+  toast("Гостевой режим");
+};
+
+window.register=async function(){
+
+  const email=$("regEmail").value.trim();
+  const password=$("regPassword").value;
+  const age=Number($("regAge").value);
+  const name=$("regName").value.trim();
+  const realName=$("regRealName").value.trim();
+  const devCode=$("regDevCode").value.trim();
+  const emoji=$("regEmoji").value.trim()||"🙂";
+
+  $("regError").textContent="";
+
+  if(!email||!password||!name){
+    $("regError").textContent="Заполни email, пароль и никнейм.";
+    return;
+  }
+
+  if(age<MIN_AGE){
+    $("regError").textContent="Для PlayHub нужен возраст от 8 лет.";
+    return;
+  }
+
+  if(password.length<6){
+    $("regError").textContent="Пароль должен содержать минимум 6 символов.";
+    return;
+  }
+
+  try{
+    const cred=await createUserWithEmailAndPassword(auth,email,password);
+
+    const isDev=devCode===DEV_KEY;
+
+    const newProfile={
+      uid:cred.user.uid,
+      email:email,
+      name:name,
+      realName:realName,
+      age:age,
+      bio:"",
+      emoji:emoji,
+      coins:isDev?10000000:100,
+      premiumUntil:0,
+      premiumTrialUsed:false,
+      dev:isDev,
+      createdAt:serverTimestamp(),
+      dailyClaim:0
+    };
+
+    await setDoc(doc(db,"users",cred.user.uid),newProfile);
+
+    toast(isDev
+      ?"Developer-аккаунт создан! +10 000 000 PlayCoins"
+      :"Аккаунт создан!");
+
+  }catch(e){
+    console.error(e);
+    $("regError").textContent=authError(e);
+  }
+};
+
+function authError(e){
+  if(e.code==="auth/email-already-in-use")
+    return "Этот email уже зарегистрирован.";
+  if(e.code==="auth/invalid-email")
+    return "Неверный email.";
+  if(e.code==="auth/weak-password")
+    return "Пароль слишком простой.";
+  return e.message||"Ошибка регистрации.";
+}
+
+window.login=async function(){
+
+  const email=$("loginEmail").value.trim();
+  const password=$("loginPassword").value;
+
+  $("authError").textContent="";
+
+  if(!email||!password){
+    $("authError").textContent="Введи email и пароль.";
+    return;
+  }
+
+  try{
+    await signInWithEmailAndPassword(auth,email,password);
+  }catch(e){
+    $("authError").textContent=authError(e);
+  }
+};
+
+window.logout=async function(){
+  if(guest){
+    location.reload();
+    return;
+  }
+
+  await signOut(auth);
+};
+
+onAuthStateChanged(auth,async user=>{
+  if(user){
+    currentUser=user;
+    guest=false;
+
+    try{
+      const snap=await getDoc(doc(db,"users",user.uid));
+
+      if(snap.exists()){
+        profile=snap.data();
+      }else{
+        profile={
+          uid:user.uid,
+          email:user.email,
+          name:user.email.split("@")[0],
+          coins:100,
+          premiumUntil:0,
+          premiumTrialUsed:false,
+          dev:false,
+          emoji:"🙂",
+          bio:""
+        };
+
+        await setDoc(doc(db,"users",user.uid),profile);
+      }
+
+      $("authModal").classList.remove("show");
+      $("app").classList.remove("hidden");
+      updateCoinsUI();
+      renderProfile();
+      renderDeveloper();
+
+    }catch(e){
+      console.error(e);
+      toast("Не удалось загрузить профиль.");
+    }
+
+  }else if(!guest){
+
+    $("loading").classList.add("hidden");
+    $("app").classList.remove("hidden");
+    $("authModal").classList.add("show");
+  }
+
+  $("loading").classList.add("hidden");
+});
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+function premiumActive(){
+  return profile && Number(profile.premiumUntil||0)>Date.now();
+}
+
+function profileHTML(){
+  if(!profile)return"";
+
+  return `
+    <div class="card ${premiumActive()?"premium":""}">
+      <div class="profileRow">
+        <div class="avatar">${escapeHTML(profile.emoji||"🙂")}</div>
+        <div>
+          <h2 style="margin:0">${escapeHTML(profile.name||"Без имени")}
+          ${profile.dev?` <span class="badge">✓ Developer</span>`:""}
+          ${premiumActive()?` <span class="badge">💎 Premium</span>`:""}
+          </h2>
+          <div class="muted">${escapeHTML(profile.email||"Гость")}</div>
+        </div>
+      </div>
+
+      <hr>
+
+      <p>${escapeHTML(profile.bio||"Описание пока не добавлено.")}</p>
+
+      <div class="grid">
+        <div class="card">
+          <b>🪙 PlayCoins</b>
+          <div class="big">${Number(profile.coins||0).toLocaleString()}</div>
+        </div>
+
+        <div class="card">
+          <b>💎 Premium</b>
+          <div>${premiumActive()?"Активен":"Не активен"}</div>
+        </div>
+      </div>
+
+      <br>
+
+      <button class="primary" onclick="openEdit()">Изменить профиль</button>
+    </div>
+  `;
+}
+
+function renderProfile(){
+  $("profileCard").innerHTML=profileHTML();
+}
+
+window.openProfile=function(){
+  showScreen("profile");
+};
+
+window.openEdit=function(){
+  $("editName").value=profile?.name||"";
+  $("editRealName").value=profile?.realName||"";
+  $("editBio").value=profile?.bio||"";
+  $("editEmoji").value=profile?.emoji||"🙂";
+  $("editModal").classList.add("show");
+};
+
+window.saveProfile=async function(){
+
+  if(guest){
+    toast("В гостевом режиме профиль не сохраняется.");
+    return;
+  }
+
+  const data={
+    name:$("editName").value.trim()||profile.name,
+    realName:$("editRealName").value.trim(),
+    bio:$("editBio").value.trim(),
+    emoji:$("editEmoji").value.trim()||"🙂"
+  };
+
+  try{
+    await updateDoc(doc(db,"users",currentUser.uid),data);
+    Object.assign(profile,data);
+    closeModal("editModal");
+    renderProfile();
+    toast("Профиль сохранён.");
+  }catch(e){
+    toast("Ошибка сохранения.");
+  }
+};
+
+/* =========================================================
+   COINS
+========================================================= */
+
+function updateCoinsUI(){
+  const coins=Number(profile?.coins||0);
+
+  $("coinTop").textContent="🪙 "+coins.toLocaleString();
+
+  if($("coinBalance"))
+    $("coinBalance").textContent=coins.toLocaleString()+" 🪙";
+
+  if($("homeCoins"))
+    $("homeCoins").textContent=coins.toLocaleString();
+
+  if($("homePremium"))
+    $("homePremium").textContent=
+      premiumActive()
+      ?"💎 Premium активен"
+      :"Premium не активен";
+}
+
+async function changeCoins(amount){
+
+  if(guest){
+    toast("В гостевом режиме PlayCoins недоступны.");
+    return false;
+  }
+
+  const newCoins=Math.max(0,Number(profile.coins||0)+amount);
+
+  try{
+    await updateDoc(doc(db,"users",currentUser.uid),{
+      coins:newCoins
+    });
+
+    profile.coins=newCoins;
+    updateCoinsUI();
+    renderProfile();
+
+    return true;
+  }catch(e){
+    console.error(e);
+    toast("Не удалось изменить PlayCoins.");
+    return false;
+  }
+}
+
+window.dailyReward=async function(){
+
+  if(guest){
+    toast("Сначала создай аккаунт.");
+    return;
+  }
+
+  const today=new Date().toDateString();
+
+  if(profile.dailyClaim===today){
+    toast("Сегодня награду ты уже получил.");
+    return;
+  }
+
+  await updateDoc(doc(db,"users",currentUser.uid),{
+    coins:increment(100),
+    dailyClaim:today
+  });
+
+  profile.coins=Number(profile.coins||0)+100;
+  profile.dailyClaim=today;
+
+  updateCoinsUI();
+  toast("+100 PlayCoins 🎁");
+};
+
+/* =========================================================
+   PREMIUM
+========================================================= */
+
+window.buyPremium=async function(){
+
+  if(guest){
+    toast("Для Premium нужен аккаунт.");
+    return;
+  }
+
+  if(Number(profile.coins||0)<10){
+    toast("Нужно 10 PlayCoins.");
+    return;
+  }
+
+  const ok=await changeCoins(-10);
+
+  if(!ok)return;
+
+  const current=Math.max(Date.now(),Number(profile.premiumUntil||0));
+  const until=current+30*24*60*60*1000;
+
+  await updateDoc(doc(db,"users",currentUser.uid),{
+    premiumUntil:until
+  });
+
+  profile.premiumUntil=until;
+
+  updateCoinsUI();
+  renderProfile();
+
+  toast("Premium активирован на 30 дней! 💎");
+};
+
+window.trialPremium=async function(){
+
+  if(guest){
+    toast("Для бесплатной пробной версии нужен аккаунт.");
+    return;
+  }
+
+  if(profile.premiumTrialUsed){
+    toast("Бесплатные 24 часа уже использованы.");
+    return;
+  }
+
+  const until=Date.now()+24*60*60*1000;
+
+  await updateDoc(doc(db,"users",currentUser.uid),{
+    premiumUntil:until,
+    premiumTrialUsed:true
+  });
+
+  profile.premiumUntil=until;
+  profile.premiumTrialUsed=true;
+
+  updateCoinsUI();
+  renderProfile();
+
+  toast("Premium активирован бесплатно на 24 часа! ✨");
+};
+
+/* =========================================================
+   POSTS
+========================================================= */
+
+window.createPost=async function(){
+
+  if(guest){
+    toast("Для публикации нужен аккаунт.");
+    return;
+  }
+
+  const text=$("postText").value.trim();
+
+  if(!text){
+    toast("Напиши что-нибудь.");
+    return;
+  }
+
+  try{
+    await addDoc(collection(db,"posts"),{
+      uid:currentUser.uid,
+      author:profile.name,
+      text:text,
+      likes:0,
+      likedBy:[],
+      createdAt:serverTimestamp()
+    });
+
+    $("postText").value="";
+    toast("Пост опубликован!");
+    renderPosts();
+
+  }catch(e){
+    console.error(e);
+    toast("Не удалось опубликовать.");
+  }
+};
+
+window.renderPosts=async function(){
+
+  const box=$("postsList");
+  box.innerHTML=`<div class="card">Загрузка постов...</div>`;
+
+  try{
+
+    const q=query(
+      collection(db,"posts"),
+      orderBy("createdAt","desc"),
+      limit(50)
+    );
+
+    const snap=await getDocs(q);
+    const search=($("postSearch")?.value||"").toLowerCase();
+
+    let html="";
+
+    snap.forEach(d=>{
+      const p=d.data();
+
+      if(search &&
+        !(String(p.text||"").toLowerCase().includes(search)||
+          String(p.author||"").toLowerCase().includes(search))){
+        return;
+      }
+
+      const liked=(p.likedBy||[]).includes(currentUser?.uid);
+
+      html+=`
+        <article class="post">
+          <div class="postTop">
+            <div class="avatar" style="width:45px;height:45px;font-size:18px">
+              ${escapeHTML((p.author||"?").slice(0,1).toUpperCase())}
+            </div>
+            <b>${escapeHTML(p.author||"Пользователь")}</b>
+          </div>
+
+          <p>${escapeHTML(p.text||"")}</p>
+
+          <div class="postActions">
+            <button onclick="likePost('${d.id}')">
+              ${liked?"❤️":"🤍"} ${Number(p.likes||0)}
+            </button>
+
+            ${p.uid===currentUser?.uid?
+              `<button onclick="deletePost('${d.id}')">🗑️</button>`:""}
+          </div>
+        </article>
+      `;
+    });
+
+    box.innerHTML=html||`<div class="card">Постов пока нет.</div>`;
+
+  }catch(e){
+    console.error(e);
+    box.innerHTML=`
+      <div class="card">
+        <b>Не удалось загрузить ленту.</b>
+        <p class="muted">Проверь правила Firestore.</p>
+      </div>`;
+  }
+};
+
+window.likePost=async function(id){
+
+  if(guest){
+    toast("Войди в аккаунт, чтобы ставить лайки.");
+    return;
+  }
+
+  try{
+    const ref=doc(db,"posts",id);
+    const snap=await getDoc(ref);
+
+    if(!snap.exists())return;
+
+    const p=snap.data();
+    let users=Array.isArray(p.likedBy)?[...p.likedBy]:[];
+
+    if(users.includes(currentUser.uid)){
+      users=users.filter(x=>x!==currentUser.uid);
+    }else{
+      users.push(currentUser.uid);
+    }
+
+    await updateDoc(ref,{
+      likedBy:users,
+      likes:users.length
+    });
+
+    renderPosts();
+
+  }catch(e){
+    toast("Ошибка лайка.");
+  }
+};
+
+window.deletePost=async function(id){
+
+  if(!currentUser)return;
+
+  try{
+    const ref=doc(db,"posts",id);
+    const snap=await getDoc(ref);
+
+    if(!snap.exists())return;
+
+    if(snap.data().uid!==currentUser.uid&&!profile.dev){
+      toast("Нельзя удалить этот пост.");
+      return;
+    }
+
+    await import("https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js")
+      .then(async({deleteDoc})=>deleteDoc(ref));
+
+    renderPosts();
+
+  }catch(e){
+    toast("Ошибка удаления.");
+  }
+};
+
+/* =========================================================
+   GROUPS
+========================================================= */
+
+window.createGroup=async function(){
+
+  if(guest){
+    toast("Нужен аккаунт.");
+    return;
+  }
+
+  const name=$("groupName").value.trim();
+
+  if(!name)return;
+
+  await addDoc(collection(db,"groups"),{
+    name,
+    owner:currentUser.uid,
+    ownerName:profile.name,
+    createdAt:serverTimestamp()
+  });
+
+  $("groupName").value="";
+  renderGroups();
+  toast("Группа создана.");
+};
+
+async function renderGroups(){
+
+  const box=$("groupsList");
+
+  try{
+    const snap=await getDocs(
+      query(collection(db,"groups"),orderBy("createdAt","desc"),limit(50))
+    );
+
+    let html="";
+
+    snap.forEach(d=>{
+      const g=d.data();
+
+      html+=`
+        <div class="card">
+          <h3>👥 ${escapeHTML(g.name)}</h3>
+          <p class="muted">Создал: ${escapeHTML(g.ownerName||"")}</p>
+          <button class="primary" onclick="toast('Групповой чат будет следующим этапом')">
+            Открыть
+          </button>
+        </div>
+      `;
+    });
+
+    box.innerHTML=html||`<div class="card">Групп пока нет.</div>`;
+
+  }catch(e){
+    box.innerHTML=`<div class="card">Не удалось загрузить группы.</div>`;
+  }
+}
+
+window.renderGroups=renderGroups;
+
+/* =========================================================
+   CHANNELS
+========================================================= */
+
+window.createChannel=async function(){
+
+  if(guest){
+    toast("Нужен аккаунт.");
+    return;
+  }
+
+  const name=$("channelName").value.trim();
+
+  if(!name)return;
+
+  await addDoc(collection(db,"channels"),{
+    name,
+    owner:currentUser.uid,
+    ownerName:profile.name,
+    subscribers:[],
+    createdAt:serverTimestamp()
+  });
+
+  $("channelName").value="";
+  renderChannels();
+  toast("Канал создан.");
+};
+
+async function renderChannels(){
+
+  const box=$("channelsList");
+
+  try{
+    const snap=await getDocs(
+      query(collection(db,"channels"),orderBy("createdAt","desc"),limit(50))
+    );
+
+    let html="";
+
+    snap.forEach(d=>{
+      const c=d.data();
+
+      html+=`
+        <div class="card">
+          <h3>📢 ${escapeHTML(c.name)}</h3>
+          <p class="muted">${escapeHTML(c.ownerName||"")}</p>
+          <button class="primary"
+            onclick="followChannel('${d.id}')">
+            Подписаться
+          </button>
+        </div>
+      `;
+    });
+
+    box.innerHTML=html||`<div class="card">Каналов пока нет.</div>`;
+
+  }catch(e){
+    box.innerHTML=`<div class="card">Не удалось загрузить каналы.</div>`;
+  }
+}
+
+window.renderChannels=renderChannels;
+
+window.followChannel=async function(id){
+
+  if(guest){
+    toast("Нужен аккаунт.");
+    return;
+  }
+
+  const ref=doc(db,"channels",id);
+  const snap=await getDoc(ref);
+
+  if(!snap.exists())return;
+
+  const data=snap.data();
+  const users=Array.isArray(data.subscribers)?[...data.subscribers]:[];
+
+  if(!users.includes(currentUser.uid))
+    users.push(currentUser.uid);
+
+  await updateDoc(ref,{subscribers:users});
+
+  toast("Подписка оформлена!");
+};
+
+/* =========================================================
+   MESSAGES
+========================================================= */
+
+window.selectChat=async function(){
+
+  if(guest){
+    toast("Для сообщений нужен аккаунт.");
+    return;
+  }
+
+  const email=$("messageUser").value.trim().toLowerCase();
+
+  if(!email){
+    toast("Введи email пользователя.");
+    return;
+  }
+
+  if(email===currentUser.email.toLowerCase()){
+    toast("Нельзя открыть чат с самим собой.");
+    return;
+  }
+
+  selectedChatEmail=email;
+
+  $("chatTitle").classList.remove("hidden");
+  $("chatBox").classList.remove("hidden");
+  $("chatSend").classList.remove("hidden");
+
+  $("chatTitle").innerHTML=`💬 Чат с <b>${escapeHTML(email)}</b>`;
+
+  await renderMessages();
+};
+
+async function renderMessages(){
+
+  if(!selectedChatEmail)return;
+
+  const box=$("chatBox");
+
+  try{
+
+    const snap=await getDocs(
+      query(
+        collection(db,"messages"),
+        where("members","array-contains",currentUser.email),
+        limit(100)
+      )
+    );
+
+    let arr=[];
+
+    snap.forEach(d=>{
+      const m=d.data();
+
+      if(m.members?.includes(selectedChatEmail))
+        arr.push(m);
+    });
+
+    arr.sort((a,b)=>{
+      const ta=a.createdAt?.seconds||0;
+      const tb=b.createdAt?.seconds||0;
+      return ta-tb;
+    });
+
+    box.innerHTML=arr.map(m=>`
+      <div class="msg ${m.from===currentUser.email?"me":""}">
+        ${escapeHTML(m.text||"")}
+      </div>
+    `).join("");
+
+    box.scrollTop=box.scrollHeight;
+
+  }catch(e){
+    box.innerHTML=`<div class="muted">Не удалось загрузить сообщения.</div>`;
+  }
+}
+
+window.sendMessage=async function(){
+
+  if(guest||!selectedChatEmail)return;
+
+  const text=$("messageText").value.trim();
+
+  if(!text)return;
+
+  await addDoc(collection(db,"messages"),{
+    from:currentUser.email,
+    to:selectedChatEmail,
+    members:[currentUser.email,selectedChatEmail],
+    text,
+    createdAt:serverTimestamp()
+  });
+
+  $("messageText").value="";
+  renderMessages();
+};
+
+/* =========================================================
+   POPULAR
+========================================================= */
+
+async function renderPopular(){
+
+  const box=$("popularList");
+
+  try{
+
+    const snap=await getDocs(
+      query(collection(db,"posts"),orderBy("likes","desc"),limit(20))
+    );
+
+    let html="";
+
+    snap.forEach(d=>{
+      const p=d.data();
+
+      html+=`
+        <div class="post">
+          <b>${escapeHTML(p.author||"")}</b>
+          <p>${escapeHTML(p.text||"")}</p>
+          <span>❤️ ${Number(p.likes||0)}</span>
+        </div>
+      `;
+    });
+
+    box.innerHTML=html||`<div class="card">Популярных постов пока нет.</div>`;
+
+  }catch(e){
+    box.innerHTML=`<div class="card">Не удалось загрузить популярное.</div>`;
+  }
+}
+
+window.renderPopular=renderPopular;
+
+/* =========================================================
+   PLAYHUB AI
+========================================================= */
+
+window.askAI=function(){
+
+  const input=$("aiInput");
+  const text=input.value.trim();
+
+  if(!text)return;
+
+  const chat=$("aiChat");
+
+  chat.innerHTML+=`
+    <div class="msg me">${escapeHTML(text)}</div>
+  `;
+
+  input.value="";
+
+  let answer="";
+
+  const t=text.toLowerCase();
+
+  if(t.includes("привет"))
+    answer="Привет! 👋 Я PlayHub AI.";
+  else if(t.includes("playcoins")||t.includes("монет"))
+    answer="PlayCoins используются внутри PlayHub Super. 🪙";
+  else if(t.includes("premium"))
+    answer="Premium стоит 10 PlayCoins на 30 дней. 💎";
+  else if(t.includes("игр"))
+    answer="У нас есть Asteroid Defense и Rocket Run. 🎮";
+  else if(t.includes("firebase"))
+    answer="Я работаю внутри PlayHub Super, а Firebase отвечает за аккаунты и облачные данные.";
+  else
+    answer="Интересная идея! Расскажи подробнее — попробуем придумать решение вместе. 🚀";
+
+  setTimeout(()=>{
+    chat.innerHTML+=`
+      <div class="msg">${escapeHTML(answer)}</div>
+    `;
+    chat.scrollTop=chat.scrollHeight;
+  },350);
+};
+
+/* =========================================================
+   ASTEROID DEFENSE
+========================================================= */
+
+function destroyAsteroid(a){
+
+  if(!a||!a.parentNode||a.dataset.destroyed==="1")return;
+
+  a.dataset.destroyed="1";
+  a.remove();
+
+  const score=Number($("asteroidScore").textContent||0)+1;
+  $("asteroidScore").textContent=score;
+
+  if(score%5===0 && !guest)
+    changeCoins(5);
+}
+
+function createAsteroid(){
+
+  const area=$("asteroidGame");
+  if(!area||!asteroidRunning)return;
+
+  const a=document.createElement("div");
+  a.className="asteroid";
+  a.style.left=Math.random()*(area.clientWidth-58)+"px";
+  a.style.top="-65px";
+
+  area.appendChild(a);
+
+  let y=-65;
+
+  const timer=setInterval(()=>{
+
+    if(!a.parentNode){
+      clearInterval(timer);
+      return;
+    }
+
+    if(a.dataset.destroyed==="1"){
+      clearInterval(timer);
+      return;
+    }
+
+    y+=3.2;
+    a.style.top=y+"px";
+
+    if(y>area.clientHeight){
+
+      if(a.dataset.destroyed!=="1"){
+        a.dataset.destroyed="1";
+        a.remove();
+
+        let lives=Number($("asteroidLives").textContent);
+
+        lives--;
+        $("asteroidLives").textContent=lives;
+
+        if(lives<=0){
+          stopAsteroids();
+          toast("Игра окончена!");
+        }
+      }
+
+      clearInterval(timer);
+    }
+
+  },30);
+
+  a.addEventListener("pointerdown",e=>{
+    e.preventDefault();
+    destroyAsteroid(a);
+    clearInterval(timer);
+  });
+}
+
+window.startAsteroids=function(){
+
+  stopAsteroids();
+
+  $("asteroidGame").innerHTML="";
+  $("asteroidScore").textContent="0";
+  $("asteroidLives").textContent="3";
+
+  asteroidRunning=true;
+
+  asteroidTimer=setInterval(createAsteroid,750);
+
+  toast("Уничтожай астероиды! ☄️");
+};
+
+function stopAsteroids(){
+
+  asteroidRunning=false;
+
+  if(asteroidTimer){
+    clearInterval(asteroidTimer);
+    asteroidTimer=null;
+  }
+}
+
+/* =========================================================
+   ROCKET RUN
+========================================================= */
+
+function rectsHit(a,b){
+  const A=a.getBoundingClientRect();
+  const B=b.getBoundingClientRect();
+
+  return !(
+    A.right<B.left||
+    A.left>B.right||
+    A.bottom<B.top||
+    A.top>B.bottom
+  );
+}
+
+function spawnRocketItem(){
+
+  const area=$("rocketGame");
+  const rocket=$("rocket");
+
+  if(!rocketRunning)return;
+
+  const obstacle=document.createElement("div");
+  obstacle.className=Math.random()<.65?"obstacle":"crystal";
+
+  obstacle.style.left=
+    Math.random()*(area.clientWidth-55)+"px";
+  obstacle.style.top="-50px";
+
+  area.appendChild(obstacle);
+
+  let y=-50;
+
+  const timer=setInterval(()=>{
+
+    if(!obstacle.parentNode){
+      clearInterval(timer);
+      return;
+    }
+
+    y+=5;
+    obstacle.style.top=y+"px";
+
+    if(rectsHit(obstacle,rocket)){
+
+      if(obstacle.classList.contains("crystal")){
+
+        rocketScore++;
+        $("rocketScore").textContent=rocketScore;
+
+        if(rocketScore%3===0&&!guest)
+          changeCoins(3);
+
+        obstacle.remove();
+
+      }else{
+
+        obstacle.remove();
+        stopRocket();
+        toast("Ракета столкнулась с препятствием! 🚀");
+      }
+
+      clearInterval(timer);
+      return;
+    }
+
+    if(y>area.clientHeight){
+      obstacle.remove();
+      clearInterval(timer);
+    }
+
+  },30);
+}
+
+window.startRocket=function(){
+
+  stopRocket();
+
+  $("rocketGame").querySelectorAll(".obstacle,.crystal")
+    .forEach(x=>x.remove());
+
+  rocketScore=0;
+  $("rocketScore").textContent="0";
+
+  const rocket=$("rocket");
+  rocket.style.left="50%";
+
+  rocketRunning=true;
+
+  rocketTimer=setInterval(spawnRocketItem,650);
+
+  toast("Rocket Run начался!");
+};
+
+function stopRocket(){
+
+  rocketRunning=false;
+
+  if(rocketTimer){
+    clearInterval(rocketTimer);
+    rocketTimer=null;
+  }
+}
+
+let rocketPointerX=null;
+
+$("rocketGame").addEventListener("pointerdown",e=>{
+  if(!rocketRunning)return;
+  rocketPointerX=e.clientX;
+});
+
+$("rocketGame").addEventListener("pointermove",e=>{
+
+  if(!rocketRunning||rocketPointerX===null)return;
+
+  const area=$("rocketGame");
+  const rocket=$("rocket");
+
+  const dx=e.clientX-rocketPointerX;
+  rocketPointerX=e.clientX;
+
+  const current=parseFloat(rocket.style.left)||50;
+
+  const percent=dx/area.clientWidth*100;
+
+  rocket.style.left=
+    Math.max(7,Math.min(93,current+percent))+"%";
+});
+
+$("rocketGame").addEventListener("pointerup",()=>{
+  rocketPointerX=null;
+});
+
+$("rocketGame").addEventListener("pointercancel",()=>{
+  rocketPointerX=null;
+});
+
+/* =========================================================
+   DEVELOPER AREA
+========================================================= */
+
+async function renderDeveloper(){
+
+  const box=$("developerContent");
+
+  if(!profile?.dev){
+    box.innerHTML=`
+      <div class="card">
+        <h3>🔒 Доступ закрыт</h3>
+        <p class="muted">Developer Area доступна только Developer-аккаунту.</p>
+      </div>
+    `;
+    return;
+  }
+
+  try{
+
+    const snap=await getDocs(
+      query(collection(db,"users"),limit(100))
+    );
+
+    let html=`
+      <div class="card">
+        <h3>🛠️ Developer</h3>
+        <p>Ты вошёл как Developer.</p>
+        <p>Баланс: 🪙 ${Number(profile.coins||0).toLocaleString()}</p>
+      </div>
+    `;
+
+    snap.forEach(d=>{
+
+      const u=d.data();
+
+      html+=`
+        <div class="card">
+          <b>${escapeHTML(u.name||"Без имени")}</b>
+          ${u.dev?`<span class="badge">Developer</span>`:""}
+          <div class="muted">${escapeHTML(u.email||"")}</div>
+          <div>🪙 ${Number(u.coins||0).toLocaleString()}</div>
+
+          <div class="row">
+            <button class="secondary"
+              onclick="grantCoins('${d.id}',100)">
+              +100
+            </button>
+
+            <button class="secondary"
+              onclick="grantCoins('${d.id}',1000)">
+              +1000
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    box.innerHTML=html;
+
+  }catch(e){
+    box.innerHTML=`
+      <div class="card">
+        <b>Developer</b>
+        <p>Не удалось загрузить пользователей.</p>
+      </div>
+    `;
+  }
+}
+
+window.grantCoins=async function(uid,amount){
+
+  if(!profile?.dev){
+    toast("Нет доступа.");
+    return;
+  }
+
+  try{
+
+    await updateDoc(doc(db,"users",uid),{
+      coins:increment(amount)
+    });
+
+    if(uid===currentUser.uid){
+      profile.coins=Number(profile.coins||0)+amount;
+      updateCoinsUI();
+      renderProfile();
+    }
+
+    toast("PlayCoins выданы: +"+amount);
+    renderDeveloper();
+
+  }catch(e){
+    toast("Не удалось выдать PlayCoins.");
+  }
+};
+
+/* =========================================================
+   THEME / DEVICE
+========================================================= */
+
+window.setTheme=function(theme){
+
+  if(theme==="light")
+    document.documentElement.classList.add("light");
+  else
+    document.documentElement.classList.remove("light");
+
+  localStorage.setItem("playhub_theme",theme);
+};
+
+const savedTheme=localStorage.getItem("playhub_theme");
+if(savedTheme==="light")
+  document.documentElement.classList.add("light");
+
+window.changeLanguage=function(){
+  const lang=$("language").value;
+  localStorage.setItem("playhub_language",lang);
+
+  if(lang==="ru")
+    toast("Русский язык включён.");
+  else
+    toast("Полный перевод интерфейса будет расширен в следующем обновлении.");
+};
+
+window.setDeviceMode=function(mode){
+  localStorage.setItem("playhub_device",mode);
+  toast("Режим: "+mode);
+};
+
+/* =========================================================
+   INITIAL UI
+========================================================= */
+
+setInterval(()=>{
+
+  if(profile){
+    updateCoinsUI();
+
+    if(premiumActive()){
+      $("homePremium").textContent="💎 Premium активен";
+    }else{
+      $("homePremium").textContent="Premium не активен";
+    }
+  }
+
+},3000);
+
+window.addEventListener("beforeunload",()=>{
+  stopAsteroids();
+  stopRocket();
+});
+
+</script>
+
+</body>
+</html>
